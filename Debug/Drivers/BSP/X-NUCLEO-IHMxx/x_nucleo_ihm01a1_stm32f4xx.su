@@ -1,0 +1,14 @@
+x_nucleo_ihm01a1_stm32f4xx.c:117:6:L6474_Board_Delay	16	static
+x_nucleo_ihm01a1_stm32f4xx.c:126:6:L6474_Board_DisableIrq	4	static,ignoring_inline_asm
+x_nucleo_ihm01a1_stm32f4xx.c:135:6:L6474_Board_EnableIrq	4	static,ignoring_inline_asm
+x_nucleo_ihm01a1_stm32f4xx.c:145:6:L6474_Board_GpioInit	48	static
+x_nucleo_ihm01a1_stm32f4xx.c:223:6:L6474_Board_Pwm1SetFreq	24	static
+x_nucleo_ihm01a1_stm32f4xx.c:239:6:L6474_Board_Pwm2SetFreq	24	static
+x_nucleo_ihm01a1_stm32f4xx.c:254:6:L6474_Board_Pwm3SetFreq	24	static
+x_nucleo_ihm01a1_stm32f4xx.c:273:6:L6474_Board_PwmInit	64	static
+x_nucleo_ihm01a1_stm32f4xx.c:326:6:L6474_Board_PwmStop	16	static
+x_nucleo_ihm01a1_stm32f4xx.c:352:6:L6474_Board_ReleaseReset	16	static
+x_nucleo_ihm01a1_stm32f4xx.c:362:6:L6474_Board_Reset	16	static
+x_nucleo_ihm01a1_stm32f4xx.c:373:6:L6474_Board_SetDirectionGpio	16	static
+x_nucleo_ihm01a1_stm32f4xx.c:395:9:L6474_Board_SpiInit	16	static
+x_nucleo_ihm01a1_stm32f4xx.c:425:9:L6474_Board_SpiWriteBytes	40	static

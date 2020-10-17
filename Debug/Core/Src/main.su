@@ -1,0 +1,8 @@
+main.c:100:6:HAL_TIM_PeriodElapsedCallback	72	static
+main.c:127:5:main	72	static
+main.c:432:6:MyFlagInterruptHandler	16	static
+main.c:509:13:MX_TIM2_Init	56	static
+main.c:567:13:MX_TIM10_Init	8	static
+main.c:600:13:MX_USART2_UART_Init	8	static
+main.c:633:13:MX_GPIO_Init	48	static
+main.c:699:6:Error_Handler	16	static

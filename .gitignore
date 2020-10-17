@@ -1,0 +1,8 @@
+*.bin
+*.elf
+*.list
+*.map
+*.su
+*.d
+*.o
+*.s
