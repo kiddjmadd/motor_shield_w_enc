@@ -22,3 +22,4 @@ I used STM's CubeIDE on Ubuntu Linux. I'm not great with IDE's and Windows seems
 
 As of initial commit => The controller moves the stepper motor once the pendulum velocity stops. The direction is chosen to increase the energy of the system, though this strategy seems to fail once the pendulum is around 90 degrees. 
 
+First swing-thru used a static value for motor activation and delay to harmonize with the pendulum. If the pendulum stops above horizontal, the direction is reversed. Not real consistent, but proves it can work.

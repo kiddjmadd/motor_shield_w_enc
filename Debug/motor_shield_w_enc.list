@@ -795,8 +795,8 @@ int main(void)
  80007d0:	484c      	ldr	r0, [pc, #304]	; (8000904 <main+0x1fc>)
  80007d2:	f005 f82a 	bl	800582a <HAL_TIM_Base_Start_IT>
 
-  uint16_t my_del = 100; // so far 175 is KOM
- 80007d6:	2364      	movs	r3, #100	; 0x64
+  uint16_t my_del = 108; // 100 works, 105 is KOM
+ 80007d6:	236c      	movs	r3, #108	; 0x6c
  80007d8:	86fb      	strh	r3, [r7, #54]	; 0x36
 
   while(1)

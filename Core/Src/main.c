@@ -408,7 +408,7 @@ int main(void)
 
   HAL_TIM_Base_Start_IT(&htim10);
 
-  uint16_t my_del = 100; // 100 works
+  uint16_t my_del = 108; // 100 works, 105 is KOM
 
   while(1)
   {
