@@ -99,24 +99,29 @@ static volatile int16_t dd_enc = -6;
 static volatile uint32_t enc_val = 0x7FFFFFFF;
 static volatile int16_t enc_norm;
 int16_t enc_norm_offset = 847+300;
+static volatile uint8_t move_allowed = 1;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   // Check which version of the timer triggered this callback and toggle LED
-
 	char uart_buf[50];
 	int uart_buf_len;
-	dd_enc = (TIM2->CNT - enc_val) - d_enc;
-	d_enc = TIM2->CNT - enc_val;
-	enc_val = TIM2->CNT;
-	//enc_norm = enc_val % 1200;
-	enc_norm = (enc_val - enc_norm_offset) % 1200;
 
 	if (htim == &htim10)
 	{
-		uart_buf_len = sprintf(uart_buf, "%u\r\n", enc_norm);
+		uart_buf_len = sprintf(uart_buf, "%u, %i, %i, %u\r\n", enc_norm, d_enc, dd_enc, L6474_GetCurrentSpeed(0));
 		HAL_UART_Transmit(&huart2, (uint8_t *) uart_buf, uart_buf_len, 100);
 
+		dd_enc = (TIM2->CNT - enc_val) - d_enc;
+		d_enc = (int16_t)(TIM2->CNT) - (int16_t)(enc_val);
+		enc_val = TIM2->CNT;
+		enc_norm = (enc_val - enc_norm_offset) % 1200;
+
+	}
+
+	//if(d_enc > -5 & d_enc < 5 & enc_norm < 1050){
+	if((enc_norm < 1050 & enc_norm > 750)|(enc_norm < 500 & enc_norm > 100)){
+		move_allowed = 1;
 	}
 }
 
@@ -408,38 +413,53 @@ int main(void)
 
   HAL_TIM_Base_Start_IT(&htim10);
 
-  uint16_t my_del = 108; // 100 works, 105 is KOM
+  uint16_t my_del = 40; // 100 works, 108 is KOM
+  int16_t my_highest_pt;
+  BSP_MotorControl_Run(my_dev,FORWARD);
+  HAL_Delay(2*my_del);
+  BSP_MotorControl_Run(my_dev,BACKWARD);
+  HAL_Delay(2*my_del);
+  BSP_MotorControl_Move(0, BACKWARD, 1);
 
   while(1)
   {
-	  if(enc_norm > 600){
-		  if(d_enc < 5 & d_enc > -5){
+	  if(enc_norm > 600){ // bottom half
+		  if(move_allowed){
 			  if(dd_enc < 0){
+				  if(enc_norm <1050){
+					  move_allowed = 0;
+					  BSP_MotorControl_Move(0, FORWARD, 1);
+					  continue;
+				  }
 				  BSP_MotorControl_Run(my_dev,BACKWARD);
-				  HAL_Delay(2*my_del);
+				  HAL_Delay(my_del);
 				  BSP_MotorControl_Move(0, BACKWARD, 1);
-				  HAL_Delay(my_del);
 			  }else{
+				  if(enc_norm >800){
+					  move_allowed = 0;
+					  BSP_MotorControl_Move(0, FORWARD, 1);
+					  continue;
+				  }
 				  BSP_MotorControl_Run(my_dev,FORWARD);
-				  HAL_Delay(2*my_del);
-				  BSP_MotorControl_Move(0, FORWARD, 1);
 				  HAL_Delay(my_del);
+				  BSP_MotorControl_Move(0, FORWARD, 1);
+			  }
+		  }
+	  }else if((enc_norm > 50) & (enc_norm < 550)){
+		  if(move_allowed){
+			  if(dd_enc < 0){
+				  BSP_MotorControl_Run(my_dev,FORWARD);
+				  HAL_Delay(my_del);
+				  BSP_MotorControl_Move(0, FORWARD, 1);
+			  }else{
+				  BSP_MotorControl_Run(my_dev,BACKWARD);
+				  HAL_Delay(my_del);
+				  BSP_MotorControl_Move(0, BACKWARD, 1);
 			  }
 		  }
 	  }else{
-		  if(d_enc < 5 & d_enc > -5){
-			  if(dd_enc < 0){
-				  BSP_MotorControl_Run(my_dev,FORWARD);
-				  HAL_Delay(2*my_del);
-				  BSP_MotorControl_Move(0, FORWARD, 1);
-				  HAL_Delay(my_del);
-			  }else{
-				  BSP_MotorControl_Run(my_dev,BACKWARD);
-				  HAL_Delay(2*my_del);
-				  BSP_MotorControl_Move(0, BACKWARD, 1);
-				  HAL_Delay(my_del);
-			  }
-		  }
+		  BSP_MotorControl_Move(0, FORWARD, 1);
+		  HAL_Delay(10);
 	  }
   }
 }
